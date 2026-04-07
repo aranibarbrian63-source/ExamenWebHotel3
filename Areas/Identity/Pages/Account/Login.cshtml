@@ -1,0 +1,126 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<style>
+    /* Fondo unificado para la vista de login */
+    body {
+        background-image: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #bae6fd 100%) !important;
+        background-color: #f0f9ff !important;
+    }
+
+    .main-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.15);
+        color: #1e293b;
+        padding: 40px;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .login-card .form-control {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        color: #0f172a;
+        border-radius: 12px;
+    }
+
+    .login-card .form-control:focus {
+        background: #ffffff;
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.15);
+        color: #0f172a;
+    }
+
+    .login-card .form-floating > label {
+        color: #64748b;
+    }
+    
+    .login-card .form-floating > .form-control:focus ~ label,
+    .login-card .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: #0ea5e9;
+    }
+
+    .login-card .btn-primary {
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-card .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25);
+    }
+
+    .login-title {
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0f172a;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="login-card">
+            <h2 class="login-title"><i class="bi bi-person-circle me-2"></i> Iniciar Sesión</h2>
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label asp-for="Input.Email" class="form-label"><i class="bi bi-envelope me-1"></i> Correo Electrónico</label>
+                    <span asp-validation-for="Input.Email" class="text-warning text-sm"></span>
+                </div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <label asp-for="Input.Password" class="form-label"><i class="bi bi-lock me-1"></i> Contraseña</label>
+                    <span asp-validation-for="Input.Password" class="text-warning text-sm"></span>
+                </div>
+                
+                <div class="checkbox mb-4">
+                    <label asp-for="Input.RememberMe" class="form-label text-secondary">
+                        <input class="form-check-input me-2" asp-for="Input.RememberMe" />
+                        Recordarme
+                    </label>
+                </div>
+                
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary mb-3">Ingresar</button>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <p class="mb-1">
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-info text-decoration-none">¿Olvidaste tu contraseña?</a>
+                    </p>
+                    <p class="mb-0 text-secondary">
+                        ¿No tienes cuenta? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-info fw-bold text-decoration-none">Regístrate</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

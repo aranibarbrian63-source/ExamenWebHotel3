@@ -1,0 +1,124 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<style>
+    /* Sobrescribir el estilo del diseño principal para tener un fondo azul bonito solo aquí */
+    body {
+        background-image: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #bae6fd 100%) !important;
+        background-color: #f0f9ff !important;
+    }
+
+    .main-card {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+
+    /* Tarjeta de registro flotante */
+    .register-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.15);
+        color: #1e293b;
+        padding: 40px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .register-card .form-control {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        color: #0f172a;
+        border-radius: 12px;
+    }
+
+    .register-card .form-control:focus {
+        background: #ffffff;
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 0.25rem rgba(14, 165, 233, 0.15);
+        color: #0f172a;
+    }
+
+    .register-card .form-floating > label {
+        color: #64748b;
+    }
+    
+    .register-card .form-floating > .form-control:focus ~ label,
+    .register-card .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: #0ea5e9;
+    }
+
+    .register-card .btn-primary {
+        background: #0ea5e9;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .register-card .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25);
+    }
+
+    .register-title {
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 30px;
+        color: #0f172a;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="register-card">
+            <h2 class="register-title"><i class="bi bi-person-plus-fill me-2"></i> Crear Cuenta</h2>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.NombreCompleto" class="form-control" autocomplete="name" aria-required="true" placeholder="Juan Pérez" />
+                    <label asp-for="Input.NombreCompleto"><i class="bi bi-person me-1"></i> Nombre Completo</label>
+                    <span asp-validation-for="Input.NombreCompleto" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label asp-for="Input.Email"><i class="bi bi-envelope me-1"></i> Correo Electrónico</label>
+                    <span asp-validation-for="Input.Email" class="text-warning text-sm"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label asp-for="Input.Password"><i class="bi bi-lock me-1"></i> Contraseña</label>
+                    <span asp-validation-for="Input.Password" class="text-warning text-sm"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                    <label asp-for="Input.ConfirmPassword"><i class="bi bi-lock-fill me-1"></i> Confirmar Contraseña</label>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-warning text-sm"></span>
+                </div>
+
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary mb-3">Registrarme</button>
+                
+                <div class="text-center mt-3">
+                    <p class="text-secondary">¿Ya tienes una cuenta? <a asp-page="./Login" class="text-info text-decoration-none fw-bold">Inicia Sesión</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

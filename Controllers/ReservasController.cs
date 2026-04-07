@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +41,27 @@ namespace examenwed3.Controllers
             if (reserva == null)
             {
                 return NotFound();
+            }
+
+            return View(reserva);
+        }
+
+        // GET: Reservas/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var reserva = await _context.Reservas
+                .Include(r => r.Hotel)
+                .Include(r => r.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (reserva == null) return NotFound();
+
+            // Solo el administrador o el dueño de la reserva pueden verla
+            if (!User.IsInRole("Administrador") && reserva.UsuarioId != _userManager.GetUserId(User))
+            {
+                return Forbid(); // Acceso denegado si no es tu reserva
             }
 
             return View(reserva);
