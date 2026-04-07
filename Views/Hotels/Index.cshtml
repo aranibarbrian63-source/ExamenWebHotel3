@@ -1,53 +1,69 @@
 ﻿@model IEnumerable<examenwed3.Models.Hotel>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<h1>Index</h1>
+<style>
+    body {
+        background-color: #0b1120 !important;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrecioPorNoche)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioPorNoche)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .hotel-card {
+        border: none;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        transition: transform 0.3s ease;
+    }
+
+        .hotel-card:hover {
+            transform: translateY(-10px);
+        }
+
+    .price-tag {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #00d4ff;
+        color: #0b1120;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-weight: bold;
+    }
+
+    .btn-reserve {
+        background: #00d4ff;
+        color: #0b1120;
+        font-weight: bold;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 style="color: #00d4ff; font-weight: 900;">EXPLORA HOTELES</h2>
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Create" class="btn btn-outline-info">+ Agregar</a>
+        }
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card hotel-card shadow-lg h-100">
+                    <div class="price-tag">S/ @item.PrecioPorNoche</div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="card-title text-dark">@item.Nombre</h4>
+                        <p class="text-muted small"><i class="bi bi-geo-alt-fill text-info"></i> @item.Direccion</p>
+                        <p class="card-text text-secondary mb-4">@item.Descripcion</p>
+
+                        <a asp-controller="Reservas" asp-action="Create" asp-route-hotelId="@item.Id"
+                           class="btn btn-reserve w-100 mt-auto">
+                            RESERVAR AHORA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

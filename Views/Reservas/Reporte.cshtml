@@ -1,0 +1,105 @@
+@model IEnumerable<examenwed3.Models.Reserva>
+@{
+    Layout = null; // Para que el reporte salga limpio sin el menú de navegación
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            padding: 30px;
+        }
+
+        .report-header {
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        @@media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="text-end mb-3 no-print">
+        <button onclick="window.print()" class="btn btn-primary">Imprimir / Guardar como PDF</button>
+    </div>
+
+    <div class="report-header text-center">
+        <h1>LUXURY HOTEL</h1>
+        <h3>Reporte General de Reservas</h3>
+        <p>Generado el: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+    </div>
+
+    <h4 class="mt-4">Lista Completa de Reservas</h4>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Cliente</th>
+                <th>Hotel</th>
+                <th>Fecha Entrada</th>
+                <th>Fecha Salida</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Usuario?.Email</td>
+                    <td>@item.Hotel?.Nombre</td>
+                    <td>@item.FechaInicio.ToShortDateString()</td>
+                    <td>@item.FechaFin.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr class="my-5" />
+
+    <h4 class="mt-4">Reservas por Usuario</h4>
+    <table class="table table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th>Usuario</th>
+                <th>Total de Reservas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.GroupBy(r => r.Usuario?.Email).OrderByDescending(g => g.Count()))
+            {
+                <tr>
+                    <td>@group.Key</td>
+                    <td>@group.Count()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr class="my-5" />
+
+    <h4 class="mt-4">Hoteles Más Reservados</h4>
+    <table class="table table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th>Hotel</th>
+                <th>Total de Reservas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.GroupBy(r => r.Hotel?.Nombre).OrderByDescending(g => g.Count()))
+            {
+                <tr>
+                    <td>@group.Key</td>
+                    <td>@group.Count()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -1,49 +1,143 @@
 ﻿@model examenwed3.Models.Reserva
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Reserva";
 }
 
-<h1>Edit</h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<h4>Reserva</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    .edit-container {
+        animation: slideUp 0.6s ease-out;
+        max-width: 600px;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .edit-card {
+        border: none;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: #003366;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        transition: 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 0 0.25 margin-left: rgba(0, 86, 179, 0.1);
+        }
+
+    .btn-update {
+        background: linear-gradient(45deg, #003366, #0056b3);
+        border: none;
+        border-radius: 15px;
+        padding: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+        .btn-update:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+        }
+</style>
+
+<div class="container edit-container py-5">
+    <div class="edit-card p-5">
+        <div class="text-center mb-4">
+            <div class="d-inline-block p-3 rounded-circle bg-primary-subtle text-primary mb-3">
+                <i class="bi bi-pencil-square fs-2"></i>
+            </div>
+            <h2 class="fw-bold" style="color: #003366;">Actualizar Reserva</h2>
+            <p class="text-muted small">Modifica los detalles de tu estancia</p>
+        </div>
+
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-4 small"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="FechaInicio" class="control-label"></label>
-                <input asp-for="FechaInicio" class="form-control" />
-                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaInicio" class="form-label text-uppercase">Check-In</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-calendar-event"></i></span>
+                        <input asp-for="FechaInicio" class="form-control border-0 bg-light" />
+                    </div>
+                    <span asp-validation-for="FechaInicio" class="text-danger x-small"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaFin" class="form-label text-uppercase">Check-Out</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="bi bi-calendar-check"></i></span>
+                        <input asp-for="FechaFin" class="form-control border-0 bg-light" />
+                    </div>
+                    <span asp-validation-for="FechaFin" class="text-danger x-small"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaFin" class="control-label"></label>
-                <input asp-for="FechaFin" class="form-control" />
-                <span asp-validation-for="FechaFin" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="HotelId" class="form-label text-uppercase">Hotel Seleccionado</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-building"></i></span>
+                    <select asp-for="HotelId" class="form-select border-0 bg-light" asp-items="ViewBag.HotelId"></select>
+                </div>
+                <span asp-validation-for="HotelId" class="text-danger x-small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="HotelId" class="control-label"></label>
-                <select asp-for="HotelId" class="form-control" asp-items="ViewBag.HotelId"></select>
-                <span asp-validation-for="HotelId" class="text-danger"></span>
+
+            <div class="mb-4">
+                <label asp-for="UsuarioId" class="form-label text-uppercase">Usuario Titular</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
+                    <select asp-for="UsuarioId" class="form-select border-0 bg-light" asp-items="ViewBag.UsuarioId"></select>
+                </div>
+                <span asp-validation-for="UsuarioId" class="text-danger x-small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-update text-white">
+                    Guardar Cambios <i class="bi bi-save ms-2"></i>
+                </button>
+                <a asp-action="Index" class="btn btn-link text-muted fw-bold text-decoration-none small mt-2">
+                    <i class="bi bi-arrow-left me-1"></i> Volver al listado
+                </a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

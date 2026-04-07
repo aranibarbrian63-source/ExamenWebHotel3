@@ -1,45 +1,122 @@
 ﻿@model examenwed3.Models.Reserva
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Cancelar Reserva";
 }
 
-<h1>Delete</h1>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Reserva</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaInicio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaInicio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaFin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaFin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Hotel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Hotel.Direccion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Usuario.Id)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<style>
+    body {
+        background-color: #fefafa;
+    }
+    /* Un fondo ligeramente cálido */
+
+    .delete-container {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        max-width: 600px;
+    }
+
+    @@keyframes shake {
+        10%, 90% {
+            transform: translate3d(-1px, 0, 0);
+        }
+
+        20%, 80% {
+            transform: translate3d(2px, 0, 0);
+        }
+
+        30%, 50%, 70% {
+            transform: translate3d(-4px, 0, 0);
+        }
+
+        40%, 60% {
+            transform: translate3d(4px, 0, 0);
+        }
+    }
+
+    .delete-card {
+        border: none;
+        border-radius: 25px;
+        background: white;
+        box-shadow: 0 15px 35px rgba(220, 53, 69, 0.1);
+        border-top: 6px solid #dc3545;
+    }
+
+    .warning-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        background: #fff5f5;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+    }
+
+    .data-row {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .btn-delete {
+        border-radius: 15px;
+        padding: 12px;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+</style>
+
+<div class="container delete-container py-5">
+    <div class="delete-card p-5 text-center">
+        <div class="warning-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+
+        <h2 class="fw-bold text-dark mb-2">¿Confirmar Cancelación?</h2>
+        <p class="text-muted mb-4">Esta acción no se puede deshacer. Estás a punto de eliminar la siguiente reserva:</p>
+
+        <div class="text-start mb-4">
+            <div class="data-row d-flex justify-content-between align-items-center">
+                <span class="text-muted fw-bold small text-uppercase">Hotel</span>
+                <span class="fw-bold text-primary">@(Model.Hotel?.Nombre ?? "No especificado")</span>
+            </div>
+
+            <div class="data-row d-flex justify-content-between align-items-center">
+                <span class="text-muted fw-bold small text-uppercase">Ubicación</span>
+                <span class="text-dark">@(Model.Hotel?.Direccion ?? "Sin dirección")</span>
+            </div>
+
+            <div class="data-row">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted fw-bold small text-uppercase">Periodo</span>
+                </div>
+                <div class="d-flex justify-content-center align-items-center gap-3 mt-2">
+                    <span class="badge bg-white text-dark border shadow-sm px-3 py-2">
+                        <i class="bi bi-calendar-event me-2"></i>@Model.FechaInicio.ToString("dd/MM/yyyy")
+                    </span>
+                    <i class="bi bi-arrow-right text-muted"></i>
+                    <span class="badge bg-white text-dark border shadow-sm px-3 py-2">
+                        <i class="bi bi-calendar-check me-2"></i>@Model.FechaFin.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-danger btn-delete shadow">
+                    SÍ, ELIMINAR RESERVA <i class="bi bi-trash3 ms-2"></i>
+                </button>
+                <a asp-action="Index" class="btn btn-link text-muted text-decoration-none fw-bold mt-2">
+                    <i class="bi bi-x-circle me-1"></i> No, mantener reserva
+                </a>
+            </div>
+        </form>
+    </div>
 </div>

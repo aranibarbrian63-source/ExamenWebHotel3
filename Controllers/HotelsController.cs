@@ -3,57 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using examenwed3.Data;
 using examenwed3.Models;
 
 namespace examenwed3.Controllers
 {
+    [Authorize] // Bloquea acceso a usuarios no registrados
     public class HotelsController : Controller
     {
-        private readonly examenwed3Context _context;
+        // CAMBIO: Usamos ApplicationDbContext para evitar conflictos de migración
+        private readonly ApplicationDbContext _context;
 
-        public HotelsController(examenwed3Context context)
+        public HotelsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Hotels
+        // GET: Hotels (Accesible por Cliente y Admin)
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Hotel.ToListAsync());
+            // Asegúrate de que en tu ApplicationDbContext el DbSet se llame 'Hoteles'
+            return View(await _context.Hoteles.ToListAsync());
         }
 
         // GET: Hotels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var hotel = await _context.Hotel
+            var hotel = await _context.Hoteles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
+
+            if (hotel == null) return NotFound();
 
             return View(hotel);
         }
 
-        // GET: Hotels/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        // --- SOLO ADMINISTRADOR ---
 
-        // POST: Hotels/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrador")]
+        public IActionResult Create() => View();
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,PrecioPorNoche,Descripcion")] Hotel hotel)
         {
             if (ModelState.IsValid)
@@ -65,33 +60,21 @@ namespace examenwed3.Controllers
             return View(hotel);
         }
 
-        // GET: Hotels/Edit/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var hotel = await _context.Hotel.FindAsync(id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var hotel = await _context.Hoteles.FindAsync(id);
+            if (hotel == null) return NotFound();
             return View(hotel);
         }
 
-        // POST: Hotels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,PrecioPorNoche,Descripcion")] Hotel hotel)
         {
-            if (id != hotel.Id)
-            {
-                return NotFound();
-            }
+            if (id != hotel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -102,56 +85,34 @@ namespace examenwed3.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HotelExists(hotel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!HotelExists(hotel.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(hotel);
         }
 
-        // GET: Hotels/Delete/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var hotel = await _context.Hotel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
+            var hotel = await _context.Hoteles.FirstOrDefaultAsync(m => m.Id == id);
+            if (hotel == null) return NotFound();
             return View(hotel);
         }
 
-        // POST: Hotels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
-            if (hotel != null)
-            {
-                _context.Hotel.Remove(hotel);
-            }
-
+            var hotel = await _context.Hoteles.FindAsync(id);
+            if (hotel != null) _context.Hoteles.Remove(hotel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HotelExists(int id)
-        {
-            return _context.Hotel.Any(e => e.Id == id);
-        }
+        private bool HotelExists(int id) => _context.Hoteles.Any(e => e.Id == id);
     }
 }

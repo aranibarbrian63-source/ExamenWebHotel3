@@ -1,0 +1,132 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Panel de Control";
+}
+
+<div class="container mt-4">
+    <h2 class="text-white mb-4"><i class="fas fa-chart-line"></i> Dashboard de Gestión</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white mb-4 shadow">
+                <div class="card-body">
+                    <h5>Total Hoteles</h5>
+                    <h2 class="display-4">@ViewBag.TotalHoteles</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white mb-4 shadow">
+                <div class="card-body">
+                    <h5>Total Usuarios</h5>
+                    <h2 class="display-4">@ViewBag.TotalUsuarios</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark mb-4 shadow">
+                <div class="card-body">
+                    <h5>Total Reservas</h5>
+                    <h2 class="display-4">@ViewBag.TotalReservas</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5>Gráfico: Reservas por Hotel</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="reservasChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5>Detalle de Reservas</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Hotel</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Cantidad</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('reservasChart').getContext('2d');
+            
+            // Extraer datos del modelo que viene desde C#
+            var nombres = [];
+            var cantidades = [];
+
+            @foreach (var item in Model)
+            {
+                <text>
+                nombres.push('@item.Nombre');
+                cantidades.push(@item.Cantidad);
+                </text>
+            }
+
+            var reservasChart = new Chart(ctx, {
+                type: 'bar', // Puede ser 'pie', 'doughnut', 'line'
+                data: {
+                    labels: nombres,
+                    datasets: [{
+                        label: 'Número de Reservas',
+                        data: cantidades,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
